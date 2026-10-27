@@ -1,0 +1,200 @@
+/* Side Comments for YouTube */
+
+/* Colors follow YouTube's light and dark themes. */
+:root {
+  --sc-bg: #ffffff;
+  --sc-track: rgba(0, 0, 0, 0.05);
+  --sc-text: #0f0f0f;
+  --sc-text-muted: #606060;
+  --sc-active-bg: #0f0f0f;
+  --sc-active-text: #ffffff;
+  --sc-focus: #065fd4;
+  --sc-scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --sc-scrollbar-track: transparent;
+}
+
+html[dark] {
+  --sc-bg: #0f0f0f;
+  --sc-track: rgba(255, 255, 255, 0.1);
+  --sc-text: #f1f1f1;
+  --sc-text-muted: #aaaaaa;
+  --sc-active-bg: #f1f1f1;
+  --sc-active-text: #0f0f0f;
+  --sc-focus: #3ea6ff;
+  --sc-scrollbar-thumb: rgba(255, 255, 255, 0.25);
+}
+
+/* Hidden unless the extension is active on this page. */
+#sc-root {
+  display: none;
+}
+
+html[data-sc="comments"] #sc-root,
+html[data-sc="recommended"] #sc-root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* In comments mode the column sticks under YouTube's top bar and fills
+   the rest of the screen, so the comments scroll on their own. */
+html[data-sc="comments"] #sc-root {
+  position: sticky;
+  top: 68px;
+  z-index: 1;
+  height: calc(100vh - 92px);
+  margin-bottom: 0;
+}
+
+html[data-sc="comments"] ytd-watch-flexy #related {
+  display: none !important;
+}
+
+.sc-switch {
+  position: relative;
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--sc-track);
+}
+
+.sc-indicator {
+  position: absolute;
+  inset: 4px auto 4px 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: var(--sc-active-bg);
+  transition: translate 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+#sc-root[data-mode="recommended"] .sc-indicator {
+  translate: 100% 0;
+}
+
+.sc-switch button {
+  position: relative;
+  z-index: 1;
+  appearance: none;
+  min-block-size: 32px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  padding: 6px 12px;
+  font: 500 14px / 20px "Roboto", "Arial", sans-serif;
+  color: var(--sc-text-muted);
+  cursor: pointer;
+  transition: color 220ms ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.sc-switch button:hover {
+  color: var(--sc-text);
+}
+
+.sc-switch button[aria-pressed="true"] {
+  color: var(--sc-active-text);
+}
+
+.sc-switch button:focus-visible {
+  outline: 2px solid var(--sc-focus);
+  outline-offset: 2px;
+}
+
+/* Windows High Contrast removes background colors, so the pressed
+   button gets a real border there instead of the sliding pill. */
+@media (forced-colors: active) {
+  .sc-indicator {
+    display: none;
+  }
+
+  .sc-switch button[aria-pressed="true"] {
+    border-color: Highlight;
+    color: Highlight;
+  }
+}
+
+#sc-panel {
+  display: none;
+}
+
+html[data-sc="comments"] #sc-panel {
+  --sc-fade: 16px;
+
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain; /* reaching the end won't scroll the page */
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sc-scrollbar-thumb) var(--sc-scrollbar-track);
+  container-type: scroll-state;
+}
+
+/* Soft fade at the top and bottom edges, only when there's more to
+   scroll in that direction. Purely visual. */
+#sc-panel::before,
+#sc-panel::after {
+  content: "";
+  position: sticky;
+  z-index: 2;
+  display: block;
+  height: var(--sc-fade);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+#sc-panel::before {
+  top: 0;
+  margin-bottom: calc(var(--sc-fade) * -1);
+  background: linear-gradient(to bottom, var(--sc-bg), transparent);
+}
+
+#sc-panel::after {
+  bottom: 0;
+  margin-top: calc(var(--sc-fade) * -1);
+  background: linear-gradient(to top, var(--sc-bg), transparent);
+}
+
+@container scroll-state(scrollable: top) {
+  #sc-panel::before {
+    opacity: 1;
+  }
+}
+
+@container scroll-state(scrollable: bottom) {
+  #sc-panel::after {
+    opacity: 1;
+  }
+}
+
+#sc-panel ytd-comments#comments {
+  margin-top: 0 !important;
+}
+
+/* YouTube's comment header is sized for the wide layout. In the side
+   column the count gets cut off and "Sort by" wraps, so scale it down. */
+#sc-panel ytd-comments-header-renderer #count {
+  font-size: 16px;
+  line-height: 22px;
+}
+
+#sc-panel ytd-comments-header-renderer #count * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+#sc-panel ytd-comments-header-renderer #sort-menu * {
+  white-space: nowrap;
+}

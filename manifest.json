@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Side Comments for YouTube",
+  "short_name": "Side Comments",
+  "version": "1.0.0",
+  "description": "A minimal Chrome extension for reading YouTube comments while watching.",
+  "permissions": ["storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "toggle-side-column": {
+      "suggested_key": { "default": "Alt+C" },
+      "description": "Switch the side column between comments and recommended"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
