@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Side Comments for YouTube",
   "short_name": "Side Comments",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A minimal Chrome extension for reading YouTube comments while watching.",
   "permissions": ["storage"],
   "background": {

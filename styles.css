@@ -43,12 +43,18 @@ html[data-sc="comments"] #sc-root {
   position: sticky;
   top: 68px;
   z-index: 1;
-  height: calc(100vh - 92px);
+  height: calc(100vh - 68px);
   margin-bottom: 0;
 }
 
 html[data-sc="comments"] ytd-watch-flexy #related {
   display: none !important;
+}
+
+/* Keeps the comments filling the entire right side when you scroll down
+   like the recommended section does. */
+html[data-sc="comments"] ytd-watch-flexy #secondary-inner {
+  height: 100%;
 }
 
 .sc-switch {
