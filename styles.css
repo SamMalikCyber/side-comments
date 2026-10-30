@@ -57,6 +57,13 @@ html[data-sc="comments"] ytd-watch-flexy #secondary-inner {
   height: 100%;
 }
 
+/* YouTube's ambient glow behind the video hangs past the end of the page.
+   With the comments moved out, that glow was the only thing making the
+   page scroll, so trim it at the bottom. */
+html[data-sc="comments"] ytd-watch-flexy #primary {
+  overflow-y: clip;
+}
+
 .sc-switch {
   position: relative;
   flex: none;
